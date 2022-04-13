@@ -1,47 +1,113 @@
 ﻿using System;
+using System.Threading;
 
 namespace ConnectFourFinalProject
 {
-    public class Player
+    public abstract class Player
     {
-        protected string PlayerName;
-        protected int Wins { get; set; }
+        protected string PlayerOne;
 
-        public Player(string playerName, int playerNum)
+        public Player(string playerName)
         {
             if(playerName == "")
             {
-                PlayerName = $"Player-{playerNum}";
+                PlayerOne = "Player-1";
             } else
             {
-                PlayerName = playerName;
+                PlayerOne = playerName;
             }
         }
 
-        public virtual string GetPlayerName()
+        public virtual string GetPlayerName(bool win)
         {
-            return PlayerName;
+            return PlayerOne;
         }
     }
-    public abstract class Game
+    public abstract class GameBase : Player
     {
+        protected static int turn;
+        private string PlayerTwo;
+        protected static char[,] Board = new char[6,7];
+
+        public GameBase(string playerOneName, string playerTwoName) : base(playerOneName)
+        {
+            if (playerTwoName == "")
+            {
+                PlayerTwo = "Player-2";
+            }
+            else
+            {
+                PlayerTwo = playerTwoName;
+            }
+        }
         protected static void SetupANewGame()
         {
-
+            turn = 0;
+            for(int i = 0; i < 6; i++)
+            {
+                for(int j = 0; j < 7; j++)
+                {
+                    Board[i, j] = '*';
+                }
+            }
         }
         public virtual void Reset()
         {
             SetupANewGame();
         }
-    }
-    public class Controller
-    {
 
-    }
-    public class GameInformation
-    {
+        public abstract void Play();
+        public virtual int PlayerTurn()
+        {
+            return turn % 2 + 1;
+        }
 
+        public override string GetPlayerName(bool win = false)
+        {
+            if (win == true) turn--;
+            if (turn % 2 == 1)
+                return PlayerTwo;
+            return base.GetPlayerName(win);
+        }
+
+        public virtual void DisplayBoard()
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 7; j++)
+                {
+                    Console.Write($"{Board[i, j]} ") ;
+                }
+                Console.WriteLine();
+            }
+        }
     }
+    public class GameController : GameBase
+    {
+        public GameController(string playerOneName, string playerTwoName) : base(playerOneName, playerTwoName)
+        {
+            SetupANewGame();
+        }
+
+        public override void Play()
+        {
+            Board[0, 0] = 'A';
+        }
+
+        public override string GetPlayerName(bool win)
+        {
+            return base.GetPlayerName(win);
+        }
+ 
+    }
+    public class Game : GameController
+    {
+        public Game(string playerOneName, string playerTwoName) : base(playerOneName, playerTwoName)
+        {
+            SetupANewGame();
+        }
+    }
+
     internal class Program
     {
         static void Main(string[] args)
@@ -57,23 +123,22 @@ namespace ConnectFourFinalProject
                 else if(choice == "")
                 {
                     Console.Clear();
-                    Console.WriteLine("Type the desired name for player one or press enter to use the default name");
+                    Console.WriteLine("Type the nickname for player one or press enter to use the default name");
                     string player1Name = Console.ReadLine();
                     Console.Clear();
-                    Console.WriteLine("Type the desired name for player two or press enter to use the default name");
+                    Console.WriteLine("Type the nickname for player two or press enter to use the default name");
                     string player2Name = Console.ReadLine();
-                    Player test1 = new Player(player1Name, 1);
-                    Player test2 = new Player(player2Name, 2);
-                    Console.Clear();
-                    Console.WriteLine("Players:");
-                    Console.WriteLine(test1.GetPlayerName());
-                    Console.WriteLine(test2.GetPlayerName());
-                    break;
+                    Game newGame = new Game(player1Name, player2Name);
+                    Console.WriteLine(newGame.GetPlayerName(false));
+                    newGame.DisplayBoard();
+                    newGame.Play();
+                    newGame.DisplayBoard();
+
                 }
                 else
                 {
                     Console.Clear();
-                    Console.WriteLine("Unknown command!");
+                    Console.Write("Unknown command! ");
                     continue;
                 }
             } while (true);
