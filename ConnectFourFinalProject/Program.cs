@@ -27,6 +27,9 @@ namespace ConnectFourFinalProject
     {
         protected static int turn;
         private string PlayerTwo;
+        public static bool[] columnfull = new bool[6];
+        public static char pLetter;
+        public static int columnInserted = 0;
         protected static char[,] Board = new char[6,7];
 
         public GameBase(string playerOneName, string playerTwoName) : base(playerOneName)
@@ -45,7 +48,8 @@ namespace ConnectFourFinalProject
             turn = 0;
             for(int i = 0; i < 6; i++)
             {
-                for(int j = 0; j < 7; j++)
+                columnfull[i] = false;
+                for (int j = 0; j < 7; j++)
                 {
                     Board[i, j] = '*';
                 }
@@ -57,6 +61,7 @@ namespace ConnectFourFinalProject
         }
 
         public abstract void Play();
+
         public virtual int PlayerTurn()
         {
             return turn % 2 + 1;
@@ -68,6 +73,7 @@ namespace ConnectFourFinalProject
             if (turn % 2 == 1)
                 return PlayerTwo;
             return base.GetPlayerName(win);
+
         }
 
         public virtual void DisplayBoard()
@@ -80,6 +86,7 @@ namespace ConnectFourFinalProject
                 }
                 Console.WriteLine();
             }
+        Console.WriteLine("0 1 2 3 4 5 6");
         }
     }
     public class GameController : GameBase
@@ -91,7 +98,41 @@ namespace ConnectFourFinalProject
 
         public override void Play()
         {
-            Board[0, 0] = 'A';
+            //if(GetPlayerName(true) == PlayerOne)
+            //{
+            //    pLetter = 'X';
+            //}
+            //else
+            //{
+            //    pLetter = 'O';
+            //}
+
+            //do
+            //{
+            //    string numInsert = Console.ReadLine();
+            //    columnInserted = Convert.ToInt32(numInsert);
+
+            //    //double numInsert = Double.Parse(Console.ReadLine());
+            //    //columnInserted = Convert.ToInt32(numInsert);
+
+            //    if (columnInserted >= 0 && columnInserted <= 8)
+            //    {
+
+            //        //putLetterInColumn(columnInserted, pLeter)    Need to do it
+            //        if (!columnfull[columnInserted])
+            //        {
+            //            pLetter = (pLetter == 'O' ? 'X' : 'O');
+            //        }
+            //        else if (WinMethod)    Need to do this method...?
+            //        {
+            //            Console.WriteLine("Player name '{0}' won!", );
+            //        }
+
+            //    }
+
+            //} while (true);
+
+            ////Board[5, 0] = 'A';
         }
 
         public override string GetPlayerName(bool win)
@@ -132,7 +173,11 @@ namespace ConnectFourFinalProject
                     Console.WriteLine(newGame.GetPlayerName(false));
                     newGame.DisplayBoard();
                     newGame.Play();
+                    Console.Clear();
                     newGame.DisplayBoard();
+                    Console.ReadKey();
+                    
+                    //newGame.DisplayBoard();
 
                 }
                 else
