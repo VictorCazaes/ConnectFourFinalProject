@@ -285,9 +285,14 @@ namespace ConnectFourFinalProject
         {
             do
             {
-                Console.WriteLine("Press enter to start a quick game, type '1' so set up a new game or type 'exit' to exit the game");
+                Console.WriteLine("Game commands:");
+                Console.WriteLine(" - Press enter to start a quick game.");
+                Console.WriteLine(" - Type '1' so set up a new game.");
+                Console.WriteLine(" - Type 'exit' to exit the game.");
+
                 string choice = Console.ReadLine();
                 choice = choice.Trim().ToLower();
+
                 if(choice == "exit")
                 {
                     break;
@@ -316,9 +321,9 @@ namespace ConnectFourFinalProject
                 }
                 else
                 {
+                    Console.WriteLine("Unknown command!");
+                    Thread.Sleep(3 * 1000);
                     Console.Clear();
-                    Console.Write("Unknown command! ");
-                    continue;
                 }
             } while (true);
         }
