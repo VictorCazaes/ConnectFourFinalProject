@@ -125,7 +125,7 @@ namespace ConnectFourFinalProject
         public bool FullBoard()
         {
             bool boardFull = true;
-            for (int i = 0; i < numRows;i++)
+            for (int i = 0; i <= numRows;i++)
             {
                 if (!columnFull[i])
                 {
@@ -234,7 +234,9 @@ namespace ConnectFourFinalProject
 
                         if (columnFull[columnInserted])
                         {
+
                             RepeatPlayerTurn();
+                            FullBoard();
                         }
                         else if (WinMethod(PlayerLetter))
                         {
@@ -245,10 +247,9 @@ namespace ConnectFourFinalProject
                             break;
                             //SetupANewGame();
                         }
-
-                        if (FullBoard())
+                        else if (FullBoard())
                         {
-                            Console.WriteLine("It is a draw! Start the games again.");
+                            Console.WriteLine("It is a draw! Start the game again.");
                             SetupANewGame();
                         }
                     }
@@ -287,7 +288,7 @@ namespace ConnectFourFinalProject
             {
                 Console.WriteLine("Game commands:");
                 Console.WriteLine(" - Press enter to start a quick game.");
-                Console.WriteLine(" - Type '1' so set up a new game.");
+                Console.WriteLine(" - Type '1' to set up a new game.");
                 Console.WriteLine(" - Type 'exit' to exit the game.");
 
                 string choice = Console.ReadLine();
