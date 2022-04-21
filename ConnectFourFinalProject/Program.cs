@@ -125,15 +125,11 @@ namespace ConnectFourFinalProject
         public bool FullBoard()
         {
             bool boardFull = true;
-            for (int i = 0; i <= numRows;i++)
+            for (int i = 0; i < numColumns;i++)
             {
-                if (!columnFull[i])
+                if (Board[0,i] == '*')
                 {
                     boardFull = false;
-                }
-                if (boardFull)
-                {
-                    DisplayBoard();
                 }
             }
             return boardFull;
@@ -144,7 +140,7 @@ namespace ConnectFourFinalProject
             bool winnerBool = false;
 
             //Horizontal lines
-            for(int row = 0; row < 6; row++)
+            for(int row = 0; row < numRows; row++)
             {
                 for (int column = 0; column < 4; column++)
                 {
@@ -158,7 +154,7 @@ namespace ConnectFourFinalProject
             //Vertical lines
             for (int row = 0; row < 3; row++)
             {
-                for (int column = 0; column < 7; column++)
+                for (int column = 0; column < numColumns; column++)
                 {
                     if (Board[row, column] == letter && Board[row + 1, column] == letter && Board[row + 2, column] == letter && Board[row + 3, column] == letter)
                     {
@@ -236,9 +232,8 @@ namespace ConnectFourFinalProject
                         {
 
                             RepeatPlayerTurn();
-                            FullBoard();
                         }
-                        else if (WinMethod(PlayerLetter))
+                        if (WinMethod(PlayerLetter))
                         {
                             Console.Clear();
                             DisplayBoard();
@@ -247,9 +242,11 @@ namespace ConnectFourFinalProject
                             break;
                             //SetupANewGame();
                         }
-                        else if (FullBoard())
+
+                        if (FullBoard())
                         {
                             Console.WriteLine("It is a draw! Start the game again.");
+                            Thread.Sleep(3 * 1000);
                             SetupANewGame();
                         }
                     }
