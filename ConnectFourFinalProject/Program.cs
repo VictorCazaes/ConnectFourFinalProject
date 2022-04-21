@@ -18,7 +18,7 @@ namespace ConnectFourFinalProject
             }
         }
 
-        public virtual string GetPlayerName(bool win)
+        public virtual string GetPlayerName()
         {
             return PlayerOne;
         }
@@ -26,10 +26,10 @@ namespace ConnectFourFinalProject
 
     public abstract class GameBase : Player
     {
-        protected static int turn;
+        protected static int Turn;
         private string PlayerTwo;
         public static bool[] columnFull = new bool[numColumns];
-        public static char pLetter;
+        public static char PlayerLetter;
         public static int columnInserted = 0;
 
         public const int numColumns = 7;
@@ -50,7 +50,8 @@ namespace ConnectFourFinalProject
 
         protected static void SetupANewGame()
         {
-            turn = 0;
+            Turn = 2;
+            PlayerLetter = 'O';
             for(int i = 0; i < numRows; i++)
             {
                 columnFull[i] = false;
@@ -68,17 +69,20 @@ namespace ConnectFourFinalProject
 
         public abstract void Play();
 
-        public virtual int PlayerTurn()
+        protected static void PlayerTurn()
         {
-            return turn % 2 + 1;
+            Turn = Turn == 2 ? 1 : 2;
         }
 
-        public override string GetPlayerName(bool win = false)
+        protected static void GetPlayerLetter()
         {
-            if (win == true) turn--;
-            if (turn % 2 == 1)
-                return PlayerTwo;
-            return base.GetPlayerName(win);
+            PlayerLetter = (PlayerLetter == 'O' ? 'X' : 'O');
+        }
+
+        public override string GetPlayerName()
+        {
+            if (Turn == 2) return PlayerTwo;
+            return base.GetPlayerName();
 
         }
 
@@ -86,13 +90,15 @@ namespace ConnectFourFinalProject
         {
             for (int i = 0; i < numRows; i++)
             {
+                Console.Write('|');
                 for (int j = 0; j < numColumns; j++)
                 {
                     Console.Write($"{Board[i, j]} ") ;
                 }
+                Console.Write('|');
                 Console.WriteLine();
             }
-        Console.WriteLine("0 1 2 3 4 5 6");
+            Console.WriteLine(" 1 2 3 4 5 6 7");
         }
 
         public void PutLetterInColumn(int columninserted, char letter)
@@ -108,11 +114,11 @@ namespace ConnectFourFinalProject
             if (!columnFull[columninserted])
             {
                 Board[index, columninserted] = letter;
-                DisplayBoard();
             }
             else
             {
                 Console.WriteLine("Column full! Choose another one.");
+                Thread.Sleep(3 * 1000);
             }
         }
 
@@ -138,11 +144,11 @@ namespace ConnectFourFinalProject
             bool winnerBool = false;
 
             //Horizontal lines
-            for(int i = 0; i < 6; i++)
+            for(int row = 0; row < 6; row++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int column = 0; column < 4; column++)
                 {
-                    if (Board[i, j] == letter && Board[i, j + 1] == letter && Board[i, j + 2] == letter && Board[i, j + 3] == letter)
+                    if (Board[row, column] == letter && Board[row, column + 1] == letter && Board[row, column + 2] == letter && Board[row, column + 3] == letter)
                     {
                         winnerBool = true;
                     }
@@ -150,11 +156,11 @@ namespace ConnectFourFinalProject
             }
 
             //Vertical lines
-            for(int i = 0; i < 4; i++)
+            for (int row = 0; row < 3; row++)
             {
-                for(int j = 0;j < 7; j++)
+                for (int column = 0; column < 7; column++)
                 {
-                    if(Board[i, j] == letter && Board[i + 1, j] == letter && Board[i + 2, j] == letter && Board[i + 3, j] == letter)
+                    if (Board[row, column] == letter && Board[row + 1, column] == letter && Board[row + 2, column] == letter && Board[row + 3, column] == letter)
                     {
                         winnerBool = true;
                     }
@@ -173,70 +179,72 @@ namespace ConnectFourFinalProject
             SetupANewGame();
         }
 
+        protected static void RepeatPlayerTurn()
+        {
+            PlayerTurn();
+            GetPlayerLetter();
+        }
+
         public override void Play()
         {
-            if (GetPlayerName(true) == PlayerOne)
-            {
-                pLetter = 'X';
-            }
-            else
-            {
-                pLetter = 'O';
-            }
-
             do
             {
-                string numInsert = Console.ReadLine();
-                columnInserted = Convert.ToInt32(numInsert);
+                Console.Clear();
+                DisplayBoard();
 
-                if (columnInserted >= 0 && columnInserted <= 7)
+                //setting the next player
+                PlayerTurn();
+                GetPlayerLetter();
+                Console.WriteLine();
+                Console.WriteLine($"Now it's {GetPlayerName()} turn.");
+
+                string userInput = Console.ReadLine();
+
+                if (int.TryParse(userInput, out int columnInserted))
                 {
-
-                    PutLetterInColumn(columnInserted, pLetter);
-
-                    if (!columnFull[columnInserted])
+                    columnInserted -= 1;
+                    if (columnInserted >= 0 && columnInserted <= 6)
                     {
-                        pLetter = (pLetter == 'O' ? 'X' : 'O');
-                    }
-                    else if (WinMethod(pLetter)) // redundant method...?
-                    {
-                        Console.WriteLine("Player '{0}', with '{1}' symbol won the game!", base.GetPlayerName(), pLetter);
-                        SetupANewGame();
-                    }
+                        PutLetterInColumn(columnInserted, PlayerLetter);
 
-                    if (FullBoard())
-                    {
-                        Console.WriteLine("It is a draw! Start the games again.");
-                        SetupANewGame();
-                    }
+                        if (columnFull[columnInserted])
+                        {
+                            RepeatPlayerTurn();
+                        }
+                        else if (WinMethod(PlayerLetter))
+                        {
+                            Console.Clear();
+                            DisplayBoard();
+                            Console.WriteLine();
+                            Console.WriteLine("Player '{0}', with '{1}' symbol won the game!", GetPlayerName(), PlayerLetter);
+                            break;
+                            //SetupANewGame();
+                        }
 
+                        if (FullBoard())
+                        {
+                            Console.WriteLine("It is a draw! Start the games again.");
+                            SetupANewGame();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Out of range! choose a column between 1 and 7");
+                        Thread.Sleep(3 * 1000);
+                        RepeatPlayerTurn();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Wrong input! choose a column between 1 and 7");
+                    Thread.Sleep(3 * 1000);
+                    RepeatPlayerTurn();
                 }
 
             } while (true);
 
-
-
-            //Board[5, 0] = 'A';
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        public override string GetPlayerName(bool win)
-        {
-            return base.GetPlayerName(win);
-        }
- 
     }
     public class Game : GameController
     {
@@ -266,8 +274,9 @@ namespace ConnectFourFinalProject
                     Console.Clear();
                     Console.WriteLine("Type the nickname for player two or press enter to use the default name");
                     string player2Name = Console.ReadLine();
+                    Console.Clear();
                     Game newGame = new Game(player1Name, player2Name);
-                    Console.WriteLine(newGame.GetPlayerName(false));
+                    //Console.WriteLine(newGame.GetPlayerName(false));
                     newGame.DisplayBoard();
                     newGame.Play();
                     //Console.Clear();
