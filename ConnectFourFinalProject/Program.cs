@@ -90,7 +90,7 @@ namespace ConnectFourFinalProject
         {
             for (int i = 0; i < numRows; i++)
             {
-                Console.Write('|');
+                Console.Write("| ");
                 for (int j = 0; j < numColumns; j++)
                 {
                     Console.Write($"{Board[i, j]} ") ;
@@ -98,7 +98,7 @@ namespace ConnectFourFinalProject
                 Console.Write('|');
                 Console.WriteLine();
             }
-            Console.WriteLine(" 1 2 3 4 5 6 7");
+            Console.WriteLine("  1 2 3 4 5 6 7");
         }
 
         public void PutLetterInColumn(int columninserted, char letter)
