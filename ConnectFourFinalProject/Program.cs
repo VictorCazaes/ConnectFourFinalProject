@@ -167,6 +167,30 @@ namespace ConnectFourFinalProject
                 }
             }
 
+            //Diagonal lines (up left to down right)
+            for (int row = 0; row < 3; row++)
+            {
+                for (int column = 0; column < 4; column++)
+                {
+                    if (Board[row, column] == letter && Board[row + 1, column + 1] == letter && Board[row + 2, column + 2] == letter && Board[row + 3, column + 3] == letter)
+                    {
+                        winnerBool = true;
+                    }
+                }
+            }
+
+            //Diagonal lines (down left to up right)
+            for (int row = 0; row < 3; row++)
+            {
+                for (int column = 6; column > 2; column--)
+                {
+                    if (Board[row, column] == letter && Board[row + 1, column - 1] == letter && Board[row + 2, column - 2] == letter && Board[row + 3, column - 3] == letter)
+                    {
+                        winnerBool = true;
+                    }
+                }
+            }
+
             return winnerBool;
         }
 
