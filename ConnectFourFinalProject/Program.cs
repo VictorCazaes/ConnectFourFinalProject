@@ -223,6 +223,7 @@ namespace ConnectFourFinalProject
                 Console.WriteLine($"Now it's {GetPlayerName()} turn.");
 
                 string userInput = Console.ReadLine();
+                userInput = userInput.Trim();
 
                 if (int.TryParse(userInput, out int columnInserted))
                 {
@@ -284,13 +285,22 @@ namespace ConnectFourFinalProject
         {
             do
             {
-                Console.WriteLine("Press enter to start or type 'exit' to exit the game");
+                Console.WriteLine("Press enter to start a quick game, type '1' so set up a new game or type 'exit' to exit the game");
                 string choice = Console.ReadLine();
+                choice = choice.Trim().ToLower();
                 if(choice == "exit")
                 {
                     break;
-                } 
-                else if(choice == "")
+                }
+                else if (choice == "")
+                {
+                    Console.Clear();
+                    Game newGame = new Game("", "");
+                    newGame.DisplayBoard();
+                    newGame.Play();
+
+                }
+                else if(choice == "1")
                 {
                     Console.Clear();
                     Console.WriteLine("Type the nickname for player one or press enter to use the default name");
@@ -300,12 +310,8 @@ namespace ConnectFourFinalProject
                     string player2Name = Console.ReadLine();
                     Console.Clear();
                     Game newGame = new Game(player1Name, player2Name);
-                    //Console.WriteLine(newGame.GetPlayerName(false));
                     newGame.DisplayBoard();
                     newGame.Play();
-                    //Console.Clear();
-                    //newGame.DisplayBoard();
-                    //Console.ReadKey();
 
                 }
                 else
