@@ -28,12 +28,12 @@ namespace ConnectFourFinalProject
     {
         protected static int Turn;
         private string PlayerTwo;
-        public static bool[] columnFull = new bool[numColumns];
-        public static char PlayerLetter;
-        public static int columnInserted = 0;
+        protected static bool[] columnFull = new bool[numColumns];
+        protected static char PlayerLetter;
+        protected static int columnInserted = 0;
 
-        public const int numColumns = 7;
-        public const int numRows = 6;
+        protected const int numColumns = 7;
+        protected const int numRows = 6;
         protected static char[,] Board = new char[numRows, numColumns];
         
         public GameBase(string playerOneName, string playerTwoName) : base(playerOneName)
@@ -74,7 +74,7 @@ namespace ConnectFourFinalProject
             Turn = Turn == 2 ? 1 : 2;
         }
 
-        protected static void GetPlayerLetter()
+        protected static void ChangePlayerLetter()
         {
             PlayerLetter = (PlayerLetter == 'O' ? 'X' : 'O');
         }
@@ -86,7 +86,7 @@ namespace ConnectFourFinalProject
 
         }
 
-        public virtual void DisplayBoard()
+        protected virtual void DisplayBoard()
         {
             for (int i = 0; i < numRows; i++)
             {
@@ -101,7 +101,7 @@ namespace ConnectFourFinalProject
             Console.WriteLine("  1 2 3 4 5 6 7");
         }
 
-        public void PutLetterInColumn(int columninserted, char letter)
+        protected void PutLetterInColumn(int columninserted, char letter)
         {
             int index = numRows - 1;
             char pl = Board[index, columninserted]; // pl for Player Letter
@@ -122,7 +122,7 @@ namespace ConnectFourFinalProject
             }
         }
 
-        public bool FullBoard()
+        protected bool FullBoard()
         {
             bool boardFull = true;
             for (int i = 0; i < numColumns;i++)
@@ -135,7 +135,7 @@ namespace ConnectFourFinalProject
             return boardFull;
         }
 
-        public static bool WinMethod(char letter)
+        protected static bool WinMethod(char letter)
         {
             bool winnerBool = false;
 
@@ -202,7 +202,7 @@ namespace ConnectFourFinalProject
         protected static void RepeatPlayerTurn()
         {
             PlayerTurn();
-            GetPlayerLetter();
+            ChangePlayerLetter();
         }
 
         public override void Play()
@@ -214,7 +214,7 @@ namespace ConnectFourFinalProject
 
                 //setting the next player
                 PlayerTurn();
-                GetPlayerLetter();
+                ChangePlayerLetter();
                 Console.WriteLine();
                 Console.WriteLine($"Now it's {GetPlayerName()} turn.");
 
@@ -299,7 +299,6 @@ namespace ConnectFourFinalProject
                 {
                     Console.Clear();
                     Game newGame = new Game("", "");
-                    newGame.DisplayBoard();
                     newGame.Play();
 
                 }
@@ -313,7 +312,6 @@ namespace ConnectFourFinalProject
                     string player2Name = Console.ReadLine();
                     Console.Clear();
                     Game newGame = new Game(player1Name, player2Name);
-                    newGame.DisplayBoard();
                     newGame.Play();
 
                 }
