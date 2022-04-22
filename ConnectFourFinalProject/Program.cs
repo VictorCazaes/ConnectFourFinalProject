@@ -64,6 +64,7 @@ namespace ConnectFourFinalProject
 
         public virtual void Reset()
         {
+            Console.Clear();
             SetupANewGame();
         }
 
@@ -274,6 +275,49 @@ namespace ConnectFourFinalProject
         public Game(string playerOneName, string playerTwoName) : base(playerOneName, playerTwoName)
         {
             SetupANewGame();
+        }
+
+        public override void Play()
+        {
+            do
+            {
+                base.Play();
+
+                do
+                {
+                    Console.WriteLine("Restart? Yes(1) No(0):");
+                    string restart = Console.ReadLine();
+
+                    restart = restart.Trim();
+
+                    if (int.TryParse(restart, out int restartGameOption))
+                    {
+                        if(restartGameOption == 0)
+                        {
+                            Environment.Exit(0);
+                        }
+                        else if(restartGameOption == 1)
+                        {
+                            Reset();
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Wrong input!");
+                            Thread.Sleep(3 * 1000);
+                            Console.Clear();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Wrong input!");
+                        Thread.Sleep(3 * 1000);
+                        Console.Clear();
+                    }
+
+                }while (true);
+
+            } while (true);
         }
     }
 
