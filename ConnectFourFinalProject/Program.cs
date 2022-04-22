@@ -240,7 +240,7 @@ namespace ConnectFourFinalProject
                             Console.WriteLine();
                             Console.WriteLine("Player '{0}', with '{1}' symbol won the game!", GetPlayerName(), PlayerLetter);
                             break;
-                            //SetupANewGame();
+
                         }
 
                         if (FullBoard())
