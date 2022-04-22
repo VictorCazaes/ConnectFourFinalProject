@@ -62,7 +62,7 @@ namespace ConnectFourFinalProject
             }
         }
 
-        public virtual void Reset()
+        protected virtual void Reset()
         {
             Console.Clear();
             SetupANewGame();
@@ -89,6 +89,8 @@ namespace ConnectFourFinalProject
 
         protected virtual void DisplayBoard()
         {
+            Console.WriteLine("Connect 4 Game Development Project: ");
+            Console.WriteLine();
             for (int i = 0; i < numRows; i++)
             {
                 Console.Write("| ");
@@ -269,6 +271,43 @@ namespace ConnectFourFinalProject
 
         }
 
+        protected override void Reset()
+        {
+            do
+            {
+                Console.WriteLine("Restart? Yes(1) No(0):");
+                string restart = Console.ReadLine();
+
+                restart = restart.Trim();
+
+                if (int.TryParse(restart, out int restartGameOption))
+                {
+                    if (restartGameOption == 0)
+                    {
+                        Environment.Exit(0);
+                    }
+                    else if (restartGameOption == 1)
+                    {
+                        base.Reset();
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Wrong input!");
+                        Thread.Sleep(3 * 1000);
+                        Console.Clear();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Wrong input!");
+                    Thread.Sleep(3 * 1000);
+                    Console.Clear();
+                }
+
+            } while (true);
+        }
+
     }
     public class Game : GameController
     {
@@ -283,39 +322,7 @@ namespace ConnectFourFinalProject
             {
                 base.Play();
 
-                do
-                {
-                    Console.WriteLine("Restart? Yes(1) No(0):");
-                    string restart = Console.ReadLine();
-
-                    restart = restart.Trim();
-
-                    if (int.TryParse(restart, out int restartGameOption))
-                    {
-                        if(restartGameOption == 0)
-                        {
-                            Environment.Exit(0);
-                        }
-                        else if(restartGameOption == 1)
-                        {
-                            Reset();
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Wrong input!");
-                            Thread.Sleep(3 * 1000);
-                            Console.Clear();
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Wrong input!");
-                        Thread.Sleep(3 * 1000);
-                        Console.Clear();
-                    }
-
-                }while (true);
+                Reset();
 
             } while (true);
         }
